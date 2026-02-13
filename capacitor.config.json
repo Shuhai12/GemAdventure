@@ -1,0 +1,9 @@
+{
+  "appId": "com.gemadventure.app",
+  "appName": "Gem Adventure",
+  "webDir": "public",
+  "server": {
+    "url": "https://你的Railway域名",
+    "cleartext": true
+  }
+}

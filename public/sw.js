@@ -1,16 +1,10 @@
 // Service Worker for PWA
 const CACHE_NAME = 'gem-game-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
   '/mobile.html',
-  '/css/style.css',
   '/css/mobile.css',
-  '/js/game.js',
   '/js/mobile-game.js',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/manifest.json'
 ];
 
 // 安装 Service Worker

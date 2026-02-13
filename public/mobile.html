@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>幻彩宝石大冒险</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+    <!-- 加载界面 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="gem-loader">
+                <div class="gem-spin"></div>
+            </div>
+            <h1 class="loading-title">幻彩宝石大冒险</h1>
+            <p class="loading-text">加载中...</p>
+        </div>
+    </div>
+
+    <!-- 主菜单 -->
+    <div class="main-menu" id="mainMenu" style="display: none;">
+        <div class="menu-bg"></div>
+        <div class="menu-content">
+            <h1 class="game-title">
+                <span class="title-icon">💎</span>
+                幻彩宝石大冒险
+            </h1>
+            <div class="menu-buttons">
+                <button class="menu-btn primary" onclick="startGame()">
+                    <span class="btn-icon">🎮</span>
+                    开始游戏
+                </button>
+                <button class="menu-btn" onclick="showLevelSelect()">
+                    <span class="btn-icon">🗺️</span>
+                    选择关卡
+                </button>
+                <button class="menu-btn" onclick="showSettings()">
+                    <span class="btn-icon">⚙️</span>
+                    设置
+                </button>
+            </div>
+            <div class="player-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">🏆</span>
+                    <span class="stat-value" id="totalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">💰</span>
+                    <span class="stat-value" id="totalCoins">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div class="game-screen" id="gameScreen" style="display: none;">
+        <!-- 顶部信息栏 -->
+        <header class="game-header">
+            <button class="icon-btn" onclick="pauseGame()">⏸️</button>
+            <div class="header-info">
+                <div class="info-badge">
+                    <span class="badge-icon">🎯</span>
+                    <span id="currentLevel">1</span>
+                </div>
+                <div class="info-badge score-badge">
+                    <span class="badge-icon">⭐</span>
+                    <span id="gameScore">0</span>
+                </div>
+                <div class="info-badge moves-badge">
+                    <span class="badge-icon">👣</span>
+                    <span id="gameMoves">30</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 目标进度 -->
+        <div class="goal-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="goal-text" id="goalText">目标: 1000 分</p>
+        </div>
+
+        <!-- 游戏棋盘 -->
+        <div class="game-board-container">
+            <canvas id="gameCanvas"></canvas>
+            <div class="particle-container" id="particleContainer"></div>
+        </div>
+
+        <!-- 道具栏 -->
+        <div class="items-bar">
+            <button class="item-button" data-item="hammer" onclick="useItem('hammer')">
+                <span class="item-icon">🔨</span>
+                <span class="item-count">3</span>
+            </button>
+            <button class="item-button" data-item="bomb" onclick="useItem('bomb')">
+                <span class="item-icon">💣</span>
+                <span class="item-count">2</span>
+            </button>
+            <button class="item-button" data-item="shuffle" onclick="useItem('shuffle')">
+                <span class="item-icon">🔄</span>
+                <span class="item-count">1</span>
+            </button>
+        </div>
+
+        <!-- 随机事件提示 -->
+        <div class="event-toast" id="eventToast"></div>
+    </div>
+
+    <!-- 暂停菜单 -->
+    <div class="modal" id="pauseModal">
+        <div class="modal-content">
+            <h2>⏸️ 游戏暂停</h2>
+            <button class="modal-btn primary" onclick="resumeGame()">继续游戏</button>
+            <button class="modal-btn" onclick="restartGame()">重新开始</button>
+            <button class="modal-btn" onclick="backToMenu()">返回菜单</button>
+        </div>
+    </div>
+
+    <!-- 胜利弹窗 -->
+    <div class="modal victory-modal" id="victoryModal">
+        <div class="modal-content">
+            <div class="victory-stars">
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+            </div>
+            <h2>🎉 恭喜过关！</h2>
+            <div class="victory-stats">
+                <p>得分: <span id="victoryScore">0</span></p>
+                <p>奖励: <span id="victoryCoins">0</span> 💰</p>
+            </div>
+            <button class="modal-btn primary" onclick="nextLevel()">下一关</button>
+            <button class="modal-btn" onclick="backToMenu()">返回菜单</button>
+        </div>
+    </div>
+
+    <!-- 失败弹窗 -->
+    <div class="modal defeat-modal" id="defeatModal">
+        <div class="modal-content">
+            <h2>😢 挑战失败</h2>
+            <p>步数用完了，再试一次吧！</p>
+            <button class="modal-btn primary" onclick="restartGame()">重新挑战</button>
+            <button class="modal-btn" onclick="backToMenu()">返回菜单</button>
+        </div>
+    </div>
+
+    <script src="js/mobile-game.js"></script>
+</body>
+</html>
+    <script>
+        // 注册 Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker 注册成功'))
+                    .catch(err => console.log('Service Worker 注册失败:', err));
+            });
+        }
+    </script>

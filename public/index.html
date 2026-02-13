@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>幻彩宝石大冒险 - 演示版</title>
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -77,15 +76,5 @@
     </div>
 
     <script src="js/game.js"></script>
-    <script>
-        // 注册 Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker 注册成功'))
-                    .catch(err => console.log('Service Worker 注册失败:', err));
-            });
-        }
-    </script>
 </body>
 </html>

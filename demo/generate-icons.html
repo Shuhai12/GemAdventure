@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成游戏图标</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 800px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .download-btn {
+            background: #28a745;
+        }
+        .download-btn:hover {
+            background: #218838;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 1rem 0;
+            border-radius: 10px;
+        }
+        .preview {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #e7f3ff;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+        h1 { margin-bottom: 0.5rem; }
+        .subtitle {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 宝石冒险 - 图标生成器</h1>
+        <p class="subtitle">为 PWA 和 Android APP 生成图标</p>
+
+        <div class="preview">
+            <div class="icon-item">
+                <p><strong>192x192</strong> (PWA 小图标)</p>
+                <canvas id="canvas192" width="192" height="192"></canvas>
+                <button class="download-btn" onclick="downloadIcon(192)">💾 下载 192x192</button>
+            </div>
+            <div class="icon-item">
+                <p><strong>512x512</strong> (PWA 大图标)</p>
+                <canvas id="canvas512" width="512" height="512"></canvas>
+                <button class="download-btn" onclick="downloadIcon(512)">💾 下载 512x512</button>
+            </div>
+        </div>
+
+        <button onclick="downloadAll()" style="margin-top: 1.5rem; font-size: 1.1rem;">📦 下载所有图标</button>
+
+        <div class="status" id="status">
+            <strong>✅ 图标已生成！</strong><br>
+            点击下载按钮保存图标，然后将它们放到 demo 目录下。
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 5px; text-align: left;">
+            <h3>📝 使用说明：</h3>
+            <ol style="margin: 0.5rem 0;">
+                <li>图标已自动生成并显示在上方</li>
+                <li>点击"下载所有图标"或单独下载</li>
+                <li>将下载的 icon-192.png 和 icon-512.png 放到 demo 目录</li>
+                <li>访问 <a href="https://www.pwabuilder.com/" target="_blank">PWA Builder</a></li>
+                <li>输入你的游戏网址进行打包</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function drawIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+
+            // 背景渐变
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // 绘制宝石
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const gemSize = size * 0.35;
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+
+            // 宝石主体 - 六边形
+            ctx.beginPath();
+            ctx.moveTo(0, -gemSize);
+            ctx.lineTo(gemSize * 0.6, -gemSize * 0.3);
+            ctx.lineTo(gemSize * 0.6, gemSize * 0.3);
+            ctx.lineTo(0, gemSize);
+            ctx.lineTo(-gemSize * 0.6, gemSize * 0.3);
+            ctx.lineTo(-gemSize * 0.6, -gemSize * 0.3);
+            ctx.closePath();
+
+            // 宝石渐变
+            const gemGradient = ctx.createLinearGradient(-gemSize, -gemSize, gemSize, gemSize);
+            gemGradient.addColorStop(0, '#ff6b9d');
+            gemGradient.addColorStop(0.5, '#ffa07a');
+            gemGradient.addColorStop(1, '#ff1493');
+            ctx.fillStyle = gemGradient;
+            ctx.fill();
+
+            // 宝石边框
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = size * 0.015;
+            ctx.stroke();
+
+            // 内部切面线条
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = size * 0.01;
+            ctx.beginPath();
+            ctx.moveTo(0, -gemSize);
+            ctx.lineTo(0, gemSize);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(-gemSize * 0.6, -gemSize * 0.3);
+            ctx.lineTo(gemSize * 0.6, gemSize * 0.3);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(gemSize * 0.6, -gemSize * 0.3);
+            ctx.lineTo(-gemSize * 0.6, gemSize * 0.3);
+            ctx.stroke();
+
+            // 高光效果
+            ctx.beginPath();
+            ctx.arc(-gemSize * 0.2, -gemSize * 0.4, gemSize * 0.15, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function generateIcons() {
+            drawIcon(document.getElementById('canvas192'));
+            drawIcon(document.getElementById('canvas512'));
+            document.getElementById('status').classList.add('show');
+        }
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById('canvas' + size);
+            const link = document.createElement('a');
+            link.download = 'icon-' + size + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAll() {
+            downloadIcon(192);
+            setTimeout(() => downloadIcon(512), 300);
+        }
+
+        // 页面加载时自动生成
+        window.onload = generateIcons;
+    </script>
+</body>
+</html>

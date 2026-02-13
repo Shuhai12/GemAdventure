@@ -1,0 +1,37 @@
+{
+  "packageId": "com.gemadventure.game",
+  "host": "gemadventure-production.up.railway.app",
+  "name": "幻彩宝石大冒险",
+  "launcherName": "宝石消消乐",
+  "display": "standalone",
+  "themeColor": "#667eea",
+  "navigationColor": "#667eea",
+  "backgroundColor": "#667eea",
+  "startUrl": "/mobile.html",
+  "iconUrl": "https://gemadventure-production.up.railway.app/icon-512.png",
+  "maskableIconUrl": "https://gemadventure-production.up.railway.app/icon-512.png",
+  "monochromeIconUrl": "https://gemadventure-production.up.railway.app/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://gemadventure-production.up.railway.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableNotifications": false
+}
