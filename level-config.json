@@ -1,0 +1,28 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "第1关",
+      "gemColors": 4,
+      "targetScore": 100,
+      "moves": 20,
+      "description": "新手关卡"
+    },
+    {
+      "id": 2,
+      "name": "第2关",
+      "gemColors": 6,
+      "targetScore": 2000,
+      "moves": 25,
+      "description": "进阶关卡"
+    },
+    {
+      "id": 3,
+      "name": "第3关",
+      "gemColors": 7,
+      "targetScore": 20000,
+      "moves": 30,
+      "description": "困难关卡"
+    }
+  ]
+}

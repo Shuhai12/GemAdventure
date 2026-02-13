@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关卡配置管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .level-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .level-card:hover {
+            transform: translateY(-5px);
+        }
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .level-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+        .level-info {
+            margin: 10px 0;
+        }
+        .level-info label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .level-info input, .level-info textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .level-info textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .level-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .level-actions button {
+            flex: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal-actions button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💎 宝石消除游戏 - 关卡配置管理</h1>
+
+        <div class="controls">
+            <button class="btn" onclick="showAddModal()">➕ 添加新关卡</button>
+        </div>
+
+        <div class="levels-grid" id="levelsGrid"></div>
+    </div>
+
+    <!-- 添加/编辑关卡模态框 -->
+    <div class="modal" id="levelModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">添加新关卡</div>
+            <form id="levelForm">
+                <input type="hidden" id="levelId">
+                <div class="form-group">
+                    <label>关卡名称</label>
+                    <input type="text" id="levelName" required>
+                </div>
+                <div class="form-group">
+                    <label>宝石颜色数量 (4-7)</label>
+                    <input type="number" id="gemColors" min="4" max="7" required>
+                </div>
+                <div class="form-group">
+                    <label>目标分数</label>
+                    <input type="number" id="targetScore" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label>可用步数</label>
+                    <input type="number" id="moves" min="5" required>
+                </div>
+                <div class="form-group">
+                    <label>关卡描述</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn btn-success">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        let currentEditId = null;
+
+        // 加载所有关卡
+        async function loadLevels() {
+            try {
+                const response = await fetch(`${API_BASE}/levels`);
+                const levels = await response.json();
+                renderLevels(levels);
+            } catch (error) {
+                console.error('加载关卡失败:', error);
+                alert('加载关卡失败，请检查服务器是否运行');
+            }
+        }
+
+        // 渲染关卡列表
+        function renderLevels(levels) {
+            const grid = document.getElementById('levelsGrid');
+            grid.innerHTML = levels.map(level => `
+                <div class="level-card">
+                    <div class="level-header">
+                        <div class="level-title">${level.name}</div>
+                    </div>
+                    <div class="level-info">
+                        <label>宝石颜色数量</label>
+                        <input type="number" value="${level.gemColors}" readonly>
+                    </div>
+                    <div class="level-info">
+                        <label>目标分数</label>
+                        <input type="number" value="${level.targetScore}" readonly>
+                    </div>
+                    <div class="level-info">
+                        <label>可用步数</label>
+                        <input type="number" value="${level.moves}" readonly>
+                    </div>
+                    <div class="level-info">
+                        <label>描述</label>
+                        <textarea readonly>${level.description || ''}</textarea>
+                    </div>
+                    <div class="level-actions">
+                        <button class="btn" onclick="editLevel(${level.id})">编辑</button>
+                        <button class="btn btn-danger" onclick="deleteLevel(${level.id})">删除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 显示添加模态框
+        function showAddModal() {
+            currentEditId = null;
+            document.getElementById('modalTitle').textContent = '添加新关卡';
+            document.getElementById('levelForm').reset();
+            document.getElementById('levelId').value = '';
+            document.getElementById('levelModal').classList.add('active');
+        }
+
+        // 编辑关卡
+        async function editLevel(id) {
+            try {
+                const response = await fetch(`${API_BASE}/levels/${id}`);
+                const level = await response.json();
+
+                currentEditId = id;
+                document.getElementById('modalTitle').textContent = '编辑关卡';
+                document.getElementById('levelId').value = level.id;
+                document.getElementById('levelName').value = level.name;
+                document.getElementById('gemColors').value = level.gemColors;
+                document.getElementById('targetScore').value = level.targetScore;
+                document.getElementById('moves').value = level.moves;
+                document.getElementById('description').value = level.description || '';
+                document.getElementById('levelModal').classList.add('active');
+            } catch (error) {
+                console.error('加载关卡失败:', error);
+                alert('加载关卡失败');
+            }
+        }
+
+        // 删除关卡
+        async function deleteLevel(id) {
+            if (!confirm('确定要删除这个关卡吗？')) return;
+
+            try {
+                await fetch(`${API_BASE}/levels/${id}`, { method: 'DELETE' });
+                loadLevels();
+            } catch (error) {
+                console.error('删除关卡失败:', error);
+                alert('删除关卡失败');
+            }
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('levelModal').classList.remove('active');
+        }
+
+        // 提交表单
+        document.getElementById('levelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const levelData = {
+                name: document.getElementById('levelName').value,
+                gemColors: parseInt(document.getElementById('gemColors').value),
+                targetScore: parseInt(document.getElementById('targetScore').value),
+                moves: parseInt(document.getElementById('moves').value),
+                description: document.getElementById('description').value
+            };
+
+            try {
+                if (currentEditId) {
+                    await fetch(`${API_BASE}/levels/${currentEditId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(levelData)
+                    });
+                } else {
+                    await fetch(`${API_BASE}/levels`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(levelData)
+                    });
+                }
+                closeModal();
+                loadLevels();
+            } catch (error) {
+                console.error('保存关卡失败:', error);
+                alert('保存关卡失败');
+            }
+        });
+
+        // 点击模态框外部关闭
+        document.getElementById('levelModal').addEventListener('click', (e) => {
+            if (e.target.id === 'levelModal') {
+                closeModal();
+            }
+        });
+
+        // 初始加载
+        loadLevels();
+    </script>
+</body>
+</html>

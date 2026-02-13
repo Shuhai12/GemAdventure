@@ -1,0 +1,21 @@
+{
+  "name": "gem-adventure-3d",
+  "version": "1.0.0",
+  "description": "3D宝石消除游戏 - Cocos Creator 3D版本",
+  "main": "index.js",
+  "scripts": {
+    "start": "cocos run -p web",
+    "build": "cocos build -p web"
+  },
+  "keywords": [
+    "cocos",
+    "game",
+    "3d",
+    "match3"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cocos-creator": "^3.8.0"
+  }
+}

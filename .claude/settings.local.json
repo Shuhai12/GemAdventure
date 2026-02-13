@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx http-server -p 8080)",
+      "Bash(npx http-server -p 3000)",
+      "Bash(lsof -i :3001)",
+      "Bash(curl -s http://localhost:3001/api/levels)",
+      "Bash(kill 52158)",
+      "Bash(node server.js)",
+      "Bash(git init)",
+      "Bash(git add .)"
+    ]
+  }
+}

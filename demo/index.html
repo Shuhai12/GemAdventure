@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幻彩宝石大冒险 - 演示版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🎮 幻彩宝石大冒险</h1>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="label">分数:</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">步数:</span>
+                    <span id="moves" class="value">30</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">关卡:</span>
+                    <span id="level" class="value">1</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="game-board" id="gameBoard"></div>
+
+            <aside class="game-sidebar">
+                <div class="goal-panel">
+                    <h3>🎯 关卡目标</h3>
+                    <p id="goalText">达到 1000 分</p>
+                </div>
+
+                <div class="items-panel">
+                    <h3>🎒 道具</h3>
+                    <div class="item-list">
+                        <button class="item-btn" data-item="clear_line" title="清除射线">
+                            ⚡ <span class="item-count">3</span>
+                        </button>
+                        <button class="item-btn" data-item="universal" title="万能替换石">
+                            💎 <span class="item-count">2</span>
+                        </button>
+                        <button class="item-btn" data-item="shield" title="护盾">
+                            🛡️ <span class="item-count">1</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="event-panel" id="eventPanel" style="display: none;">
+                    <h3>✨ 随机事件</h3>
+                    <p id="eventText"></p>
+                </div>
+            </aside>
+        </main>
+
+        <div class="modal" id="winModal" style="display: none;">
+            <div class="modal-content">
+                <h2>🎉 恭喜过关！</h2>
+                <p>得分: <span id="finalScore"></span></p>
+                <button onclick="nextLevel()">下一关</button>
+                <button onclick="restartLevel()">重新开始</button>
+            </div>
+        </div>
+
+        <div class="modal" id="loseModal" style="display: none;">
+            <div class="modal-content">
+                <h2>😢 挑战失败</h2>
+                <p>步数用完了，再试一次吧！</p>
+                <button onclick="restartLevel()">重新开始</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
